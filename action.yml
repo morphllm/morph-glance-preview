@@ -1,0 +1,21 @@
+name: 'Morph Preview Test'
+description: 'AI browser testing for preview deployments'
+author: 'Morph'
+branding:
+  icon: 'play-circle'
+  color: 'purple'
+
+inputs:
+  api-key:
+    description: 'Morph API key'
+    required: true
+  preview-url:
+    description: 'Preview deployment URL'
+    required: true
+  instructions:
+    description: 'Custom testing instructions for the AI'
+    required: false
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
