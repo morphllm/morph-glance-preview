@@ -1,21 +1,62 @@
-# Morph Preview Test Action
+# Glance - AI Browser Testing for Preview Deployments
 
-AI-powered browser testing for preview deployments.
+Catch bugs before they hit production. Glance automatically tests every preview deployment with AI-powered browser testing.
 
-## Usage
+https://github.com/user-attachments/assets/demo.mp4
+
+## Get Started in 2 Minutes
+
+### 1. Install the GitHub App
+
+[**Install Glance →**](https://www.morphllm.com/dashboard/integrations/github)
+
+### 2. Add to Your Workflow
 
 ```yaml
-- uses: morphllm/preview-test-action@v1
+- uses: morphllm/glance-preview@v1
   with:
     api-key: ${{ secrets.MORPH_API_KEY }}
     preview-url: ${{ steps.deploy.outputs.url }}
-    instructions: Test the checkout flow  # Optional
 ```
 
-## Setup
+That's it. Glance will test your preview and comment the results directly on your PR.
 
-1. Install the Morph GitHub App at [morphllm.com/dashboard/integrations/github](https://morphllm.com/dashboard/integrations/github)
-2. Add `MORPH_API_KEY` to your repository secrets
+## Why Glance?
+
+- **Zero test maintenance** - AI adapts to UI changes automatically
+- **Real browser testing** - Not screenshots, actual interaction
+- **Works with any stack** - Vercel, Netlify, custom infrastructure, self-hosted
+- **PR comments** - Results posted where your team already works
+
+## Full Example
+
+```yaml
+name: Preview Test
+on: pull_request
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy Preview
+        id: deploy
+        run: |
+          # Your deployment script
+          echo "url=https://pr-${{ github.event.pull_request.number }}.preview.example.com" >> $GITHUB_OUTPUT
+
+      - name: Test with Glance
+        uses: morphllm/glance-preview@v1
+        with:
+          api-key: ${{ secrets.MORPH_API_KEY }}
+          preview-url: ${{ steps.deploy.outputs.url }}
+          instructions: |
+            Test the checkout flow:
+            - Add item to cart
+            - Complete purchase
+            - Verify confirmation
+```
 
 ## Inputs
 
@@ -23,53 +64,15 @@ AI-powered browser testing for preview deployments.
 |-------|----------|-------------|
 | `api-key` | Yes | Your Morph API key |
 | `preview-url` | Yes | Preview deployment URL |
-| `instructions` | No | Custom testing instructions |
+| `instructions` | No | Custom testing focus |
 
 ## Outputs
 
 | Output | Description |
 |--------|-------------|
-| `test-id` | The ID of the triggered test |
-| `status` | The status of the test (started) |
+| `test-id` | Test run ID |
+| `status` | Test status |
 
-## Example: Custom Deployment
+---
 
-```yaml
-name: Preview Test
-on: pull_request
-
-jobs:
-  deploy-and-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Deploy to EKS
-        id: deploy
-        run: |
-          # Your deployment script
-          echo "url=https://pr-${{ github.event.pull_request.number }}.preview.example.com" >> $GITHUB_OUTPUT
-
-      - name: Run Morph Preview Test
-        uses: morphllm/preview-test-action@v1
-        with:
-          api-key: ${{ secrets.MORPH_API_KEY }}
-          preview-url: ${{ steps.deploy.outputs.url }}
-          instructions: |
-            Test the main user flows:
-            - Login functionality
-            - Dashboard navigation
-            - Form submissions
-```
-
-## How It Works
-
-1. Your CI/CD deploys to your custom infrastructure (EKS, self-hosted, etc.)
-2. This action sends the preview URL to Morph
-3. Morph's AI tests the preview deployment
-4. Results are posted directly to your PR as a comment
-
-## Requirements
-
-- Morph GitHub App must be installed on your repository
-- Valid Morph API key with credits
+[Get your API key →](https://www.morphllm.com/dashboard/integrations/github)

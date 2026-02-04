@@ -1,5 +1,5 @@
-name: 'Morph Preview Test'
-description: 'AI browser testing for preview deployments'
+name: 'Glance Preview Test'
+description: 'AI-powered browser testing for preview deployments'
 author: 'Morph'
 branding:
   icon: 'play-circle'
